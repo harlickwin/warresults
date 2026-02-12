@@ -3,21 +3,4966 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Clan War Report</title>
+  <title>Clan War Analysis - ally-clan vs enemy-clan</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 40px; text-align: center; }
-    h1 { color: #007bff; }
-    .status { background: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { color: #333; margin-bottom: 10px; font-size: 2em; }
+    h2 { color: #555; margin: 30px 0 15px; font-size: 1.5em; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    h3 { color: #666; margin: 20px 0 10px; font-size: 1.2em; }
+    .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #007bff; }
+    .subtitle { color: #666; font-size: 1.2em; margin-top: 5px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+    .stat-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff; }
+    .stat-card.success { border-left-color: #28a745; background: #d4edda; }
+    .stat-card.warning { border-left-color: #ffc107; background: #fff3cd; }
+    .stat-card.danger { border-left-color: #dc3545; background: #f8d7da; }
+    .stat-label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+    .stat-value { font-size: 2.5em; font-weight: 700; color: #333; }
+    .stat-desc { font-size: 0.85em; color: #666; margin-top: 5px; }
+    .notes { background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #b3d9ff; }
+    .notes strong { color: #004085; display: block; margin-bottom: 10px; }
+    .notes div { color: #004085; margin-bottom: 5px; padding-left: 10px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    thead { background: #f8f9fa; position: sticky; top: 0; }
+    th { padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; }
+    td { padding: 12px; border-bottom: 1px solid #dee2e6; }
+    tbody tr:nth-child(even) { background: #f8f9fa; }
+    tbody tr:hover { background: #e9ecef; }
+    .priority-high { background: #d4edda; border-left: 4px solid #28a745; }
+    .priority-medium { background: #fff3cd; border-left: 4px solid #ffc107; }
+    .priority-low { background: #f8d7da; border-left: 4px solid #dc3545; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 600; }
+    .badge-high { background: #28a745; color: white; }
+    .badge-medium { background: #ffc107; color: #333; }
+    .badge-low { background: #dc3545; color: white; }
+    .player-section { margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+    .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #dee2e6; }
+    .player-name { font-size: 1.3em; font-weight: 600; color: #333; }
+    .player-power { font-size: 1.1em; color: #666; }
+    .assigned-target { background: #d4edda !important; border-left: 4px solid #28a745 !important; }
+    .checkmark { color: #28a745; font-size: 1.2em; margin-right: 8px; }
+    .reset-section { margin: 30px 0; padding: 20px; background: white; border: 2px solid #dee2e6; border-radius: 8px; }
+    .reset-header { background: #007bff; color: white; padding: 15px; margin: -20px -20px 20px; border-radius: 6px 6px 0 0; }
+    @media print { body { background: white; } .container { box-shadow: none; } }
   </style>
 </head>
 <body>
-  <h1>⚔️ Clan War Analysis - Test Report</h1>
-  <div class="status">
-    <h2>✅ GitHub Pages Deployment Test</h2>
-    <p>If you can see this page, the deployment is working!</p>
-    <p>Generated: <strong>Test Mode</strong></p>
+  <div class="container">
+    <div class="header">
+      <h1>⚔️ Clan War Analysis</h1>
+      <div class="subtitle">ally-clan vs enemy-clan</div>
+      <div style="color: #999; margin-top: 10px; font-size: 0.9em;">Generated: 2/13/2026, 3:09:01 AM</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card warning">
+        <div class="stat-label">Our Reset Potential</div>
+        <div class="stat-value" style="color: #28a745;">1</div>
+        <div class="stat-desc">Times we can force 45 defeats</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-label">Enemy Reset Potential</div>
+        <div class="stat-value" style="color: #dc3545;">5</div>
+        <div class="stat-desc">Times they can force 45 defeats</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Attacks Used</div>
+        <div class="stat-value" style="color: #007bff;">45</div>
+        <div class="stat-desc">Out of 240 available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Defeats Caused</div>
+        <div class="stat-value" style="color: #007bff;">71</div>
+        <div class="stat-desc">Total enemy defeats</div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <strong>📋 Strategy Notes:</strong>
+      <div>• ⚠ Disadvantage: They can achieve 5 reset(s) vs your 1</div><div>• Strategy: Round-robin attack distribution (everyone attacks once before anyone attacks twice)</div><div>• Each player attacks the strongest enemy they can beat</div><div>• Weakest players attack first in each round to distribute burden evenly</div><div>• Strongest players saved for high-value targets (maximize points)</div><div>• Each reset requires 45 unique enemy defeats to trigger</div><div>• 195 attacks unused (saved or no viable targets at 90% win rate)</div>
+    </div>
+
+    <h2>📊 Attack Strategy by Reset</h2>
+    
+      <div class="reset-section">
+        <div class="reset-header">
+          <h3 style="margin: 0;">Reset 1 - 45 Defeats (45 attacks)</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Priority</th>
+              <th>Attacker</th>
+              <th>Attacker Power</th>
+              <th>Defender</th>
+              <th>Defender Power</th>
+              <th>Win Rate</th>
+              <th>Attack #</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr class="priority-low">
+                <td>1</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Davinnit</strong></td>
+                <td>21,500,000</td>
+                <td><strong>Stolar</strong></td>
+                <td>14,500,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>2</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>SiebenKingTulip</strong></td>
+                <td>34,200,000</td>
+                <td><strong>omg</strong></td>
+                <td>32,100,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>3</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Guest 91696</strong></td>
+                <td>74,400,000</td>
+                <td><strong>Paet</strong></td>
+                <td>130,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>4</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Jiggabytes</strong></td>
+                <td>77,300,000</td>
+                <td><strong>AdaskuuuBKS</strong></td>
+                <td>57,600,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>5</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>Omazio</strong></td>
+                <td>101,000,000</td>
+                <td><strong>mtzKATUJE</strong></td>
+                <td>196,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>6</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Elucidator</strong></td>
+                <td>116,000,000</td>
+                <td><strong>Yiko</strong></td>
+                <td>177,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>7</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Guest 72919</strong></td>
+                <td>117,000,000</td>
+                <td><strong>Jowii</strong></td>
+                <td>172,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>8</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>kyotoJP</strong></td>
+                <td>118,000,000</td>
+                <td><strong>Ragnarok4323</strong></td>
+                <td>122,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>9</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>Randell</strong></td>
+                <td>129,000,000</td>
+                <td><strong>Rylli</strong></td>
+                <td>209,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>10</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>JohnCatt</strong></td>
+                <td>134,000,000</td>
+                <td><strong>OhGee</strong></td>
+                <td>158,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>11</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Mazenn</strong></td>
+                <td>137,000,000</td>
+                <td><strong>TomatoJr [ALS]</strong></td>
+                <td>195,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>12</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>TapSnap</strong></td>
+                <td>138,000,000</td>
+                <td><strong>birck</strong></td>
+                <td>137,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>13</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Timmytop</strong></td>
+                <td>139,000,000</td>
+                <td><strong>Arnamik</strong></td>
+                <td>110,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>14</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Froggy89</strong></td>
+                <td>149,000,000</td>
+                <td><strong>Kupal</strong></td>
+                <td>167,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>15</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Mackdonalds</strong></td>
+                <td>149,000,000</td>
+                <td><strong>Arczimedes</strong></td>
+                <td>130,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>16</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>RoyGod</strong></td>
+                <td>153,000,000</td>
+                <td><strong>Guest 7389</strong></td>
+                <td>129,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>17</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Jkmk1</strong></td>
+                <td>157,000,000</td>
+                <td><strong>Jojo3</strong></td>
+                <td>112,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>18</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Guest 6179</strong></td>
+                <td>157,000,000</td>
+                <td><strong>Lotak</strong></td>
+                <td>159,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>19</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>yome</strong></td>
+                <td>195,000,000</td>
+                <td><strong>Darkflare</strong></td>
+                <td>328,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>20</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>Sunorc</strong></td>
+                <td>237,000,000</td>
+                <td><strong>Linek</strong></td>
+                <td>252,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>21</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>Infernal</strong></td>
+                <td>310,000,000</td>
+                <td><strong>MrT9601</strong></td>
+                <td>353,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>22</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>littlefrydude</strong></td>
+                <td>319,000,000</td>
+                <td><strong>NaNoTeChK</strong></td>
+                <td>298,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>23</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>BigMouse</strong></td>
+                <td>534,000,000</td>
+                <td><strong>Mouch</strong></td>
+                <td>227,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>24</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>SummerRaine</strong></td>
+                <td>985,000,000</td>
+                <td><strong>Bukaa1</strong></td>
+                <td>523,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>25</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>harliquin</strong></td>
+                <td>1,560,000,000</td>
+                <td><strong>Digby</strong></td>
+                <td>418,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>1/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>26</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>yome</strong></td>
+                <td>195,000,000</td>
+                <td><strong>GummyMage</strong></td>
+                <td>241,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>27</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Sunorc</strong></td>
+                <td>237,000,000</td>
+                <td><strong>HuxGen</strong></td>
+                <td>185,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>28</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>Infernal</strong></td>
+                <td>310,000,000</td>
+                <td><strong>Saurius</strong></td>
+                <td>330,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>29</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>littlefrydude</strong></td>
+                <td>319,000,000</td>
+                <td><strong>Zolrac</strong></td>
+                <td>223,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>30</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>BigMouse</strong></td>
+                <td>534,000,000</td>
+                <td><strong>Hakop</strong></td>
+                <td>180,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>31</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>SummerRaine</strong></td>
+                <td>985,000,000</td>
+                <td><strong>kycst</strong></td>
+                <td>379,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>32</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>harliquin</strong></td>
+                <td>1,560,000,000</td>
+                <td><strong>Szefu</strong></td>
+                <td>327,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>2/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>33</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>yome</strong></td>
+                <td>195,000,000</td>
+                <td><strong>H4ck</strong></td>
+                <td>167,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>34</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Sunorc</strong></td>
+                <td>237,000,000</td>
+                <td><strong>xWooky</strong></td>
+                <td>140,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>35</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>Infernal</strong></td>
+                <td>310,000,000</td>
+                <td><strong>Guest 56193</strong></td>
+                <td>315,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>36</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>littlefrydude</strong></td>
+                <td>319,000,000</td>
+                <td><strong>TrueV6</strong></td>
+                <td>174,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-high">
+                <td>37</td>
+                <td><span class="badge badge-high">HIGH</span></td>
+                <td><strong>SummerRaine</strong></td>
+                <td>985,000,000</td>
+                <td><strong>Szalonylipen</strong></td>
+                <td>315,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>38</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>harliquin</strong></td>
+                <td>1,560,000,000</td>
+                <td><strong>TripleC1231</strong></td>
+                <td>275,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>3/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>39</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>yome</strong></td>
+                <td>195,000,000</td>
+                <td><strong>rahion</strong></td>
+                <td>167,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>4/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>40</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>Infernal</strong></td>
+                <td>310,000,000</td>
+                <td><strong>sebson90</strong></td>
+                <td>257,000,000</td>
+                <td><strong>90.0%</strong></td>
+                <td>4/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>41</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>SummerRaine</strong></td>
+                <td>985,000,000</td>
+                <td><strong>Bradsta3</strong></td>
+                <td>272,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>4/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>42</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>harliquin</strong></td>
+                <td>1,560,000,000</td>
+                <td><strong>Seeking</strong></td>
+                <td>258,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>4/5</td>
+              </tr>
+            
+              <tr class="priority-low">
+                <td>43</td>
+                <td><span class="badge badge-low">LOW</span></td>
+                <td><strong>Infernal</strong></td>
+                <td>310,000,000</td>
+                <td><strong>Trigz</strong></td>
+                <td>170,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>5/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>44</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>SummerRaine</strong></td>
+                <td>985,000,000</td>
+                <td><strong>Oxox</strong></td>
+                <td>246,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>5/5</td>
+              </tr>
+            
+              <tr class="priority-medium">
+                <td>45</td>
+                <td><span class="badge badge-medium">MEDIUM</span></td>
+                <td><strong>harliquin</strong></td>
+                <td>1,560,000,000</td>
+                <td><strong>Wachu</strong></td>
+                <td>239,000,000</td>
+                <td><strong>100.0%</strong></td>
+                <td>5/5</td>
+              </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    
+
+    <h2>👥 Player Assignments</h2>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">harliquin</div>
+            <div class="player-power">Power: 1,560,000,000 | Can defeat: 50 enemies | Assigned: 5 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Bukaa1</strong></td>
+                  <td>523,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Digby</strong></td>
+                  <td>418,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>kycst</strong></td>
+                  <td>379,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>MrT9601</strong></td>
+                  <td>353,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Saurius</strong></td>
+                  <td>330,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Szefu</strong></td>
+                  <td>327,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 56193</strong></td>
+                  <td>315,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Szalonylipen</strong></td>
+                  <td>315,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>NaNoTeChK</strong></td>
+                  <td>298,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>TripleC1231</strong></td>
+                  <td>275,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Bradsta3</strong></td>
+                  <td>272,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Seeking</strong></td>
+                  <td>258,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>sebson90</strong></td>
+                  <td>257,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Oxox</strong></td>
+                  <td>246,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>GummyMage</strong></td>
+                  <td>241,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Wachu</strong></td>
+                  <td>239,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lakari</strong></td>
+                  <td>219,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Malfurion</strong></td>
+                  <td>212,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Bigboi</strong></td>
+                  <td>197,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TrueV6</strong></td>
+                  <td>174,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Trigz</strong></td>
+                  <td>170,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>H4ck</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>rahion</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>korean11</strong></td>
+                  <td>164,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Moodaxadel</strong></td>
+                  <td>147,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>xWooky</strong></td>
+                  <td>140,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">SummerRaine</div>
+            <div class="player-power">Power: 985,000,000 | Can defeat: 50 enemies | Assigned: 5 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Bukaa1</strong></td>
+                  <td>523,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Digby</strong></td>
+                  <td>418,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>kycst</strong></td>
+                  <td>379,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>MrT9601</strong></td>
+                  <td>353,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Saurius</strong></td>
+                  <td>330,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Szefu</strong></td>
+                  <td>327,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 56193</strong></td>
+                  <td>315,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Szalonylipen</strong></td>
+                  <td>315,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>NaNoTeChK</strong></td>
+                  <td>298,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TripleC1231</strong></td>
+                  <td>275,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Bradsta3</strong></td>
+                  <td>272,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Seeking</strong></td>
+                  <td>258,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>sebson90</strong></td>
+                  <td>257,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Oxox</strong></td>
+                  <td>246,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>GummyMage</strong></td>
+                  <td>241,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Wachu</strong></td>
+                  <td>239,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lakari</strong></td>
+                  <td>219,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Malfurion</strong></td>
+                  <td>212,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Bigboi</strong></td>
+                  <td>197,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TrueV6</strong></td>
+                  <td>174,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Trigz</strong></td>
+                  <td>170,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>H4ck</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>rahion</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>korean11</strong></td>
+                  <td>164,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Moodaxadel</strong></td>
+                  <td>147,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>xWooky</strong></td>
+                  <td>140,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">BigMouse</div>
+            <div class="player-power">Power: 534,000,000 | Can defeat: 24 enemies | Assigned: 3 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">littlefrydude</div>
+            <div class="player-power">Power: 319,000,000 | Can defeat: 30 enemies | Assigned: 4 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>MrT9601</strong></td>
+                  <td>353,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>NaNoTeChK</strong></td>
+                  <td>298,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>GummyMage</strong></td>
+                  <td>241,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>TrueV6</strong></td>
+                  <td>174,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>H4ck</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>rahion</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Infernal</div>
+            <div class="player-power">Power: 310,000,000 | Can defeat: 36 enemies | Assigned: 5 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>MrT9601</strong></td>
+                  <td>353,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Saurius</strong></td>
+                  <td>330,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Guest 56193</strong></td>
+                  <td>315,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>NaNoTeChK</strong></td>
+                  <td>298,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TripleC1231</strong></td>
+                  <td>275,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>sebson90</strong></td>
+                  <td>257,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>GummyMage</strong></td>
+                  <td>241,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Trigz</strong></td>
+                  <td>170,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>H4ck</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>rahion</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>korean11</strong></td>
+                  <td>164,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Moodaxadel</strong></td>
+                  <td>147,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Sunorc</div>
+            <div class="player-power">Power: 237,000,000 | Can defeat: 24 enemies | Assigned: 3 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Linek</strong></td>
+                  <td>252,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>xWooky</strong></td>
+                  <td>140,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">HOZE</div>
+            <div class="player-power">Power: 208,000,000 | Can defeat: 18 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">yome</div>
+            <div class="player-power">Power: 195,000,000 | Can defeat: 26 enemies | Assigned: 4 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Darkflare</strong></td>
+                  <td>328,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>GummyMage</strong></td>
+                  <td>241,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Mouch</strong></td>
+                  <td>227,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Zolrac</strong></td>
+                  <td>223,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>HuxGen</strong></td>
+                  <td>185,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Hakop</strong></td>
+                  <td>180,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>H4ck</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>rahion</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Guest 9852</div>
+            <div class="player-power">Power: 191,000,000 | Can defeat: 9 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">FemiAiko</div>
+            <div class="player-power">Power: 183,000,000 | Can defeat: 15 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Flexi</div>
+            <div class="player-power">Power: 176,000,000 | Can defeat: 14 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">speedbumps</div>
+            <div class="player-power">Power: 161,000,000 | Can defeat: 9 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">BillyLid</div>
+            <div class="player-power">Power: 160,000,000 | Can defeat: 15 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">automan</div>
+            <div class="player-power">Power: 158,000,000 | Can defeat: 16 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Jkmk1</div>
+            <div class="player-power">Power: 157,000,000 | Can defeat: 15 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Guest 6179</div>
+            <div class="player-power">Power: 157,000,000 | Can defeat: 17 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">RoyGod</div>
+            <div class="player-power">Power: 153,000,000 | Can defeat: 12 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Froggy89</div>
+            <div class="player-power">Power: 149,000,000 | Can defeat: 16 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Mackdonalds</div>
+            <div class="player-power">Power: 149,000,000 | Can defeat: 9 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Ryls</div>
+            <div class="player-power">Power: 143,000,000 | Can defeat: 3 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Timmytop</div>
+            <div class="player-power">Power: 139,000,000 | Can defeat: 7 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">TapSnap</div>
+            <div class="player-power">Power: 138,000,000 | Can defeat: 10 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Mazenn</div>
+            <div class="player-power">Power: 137,000,000 | Can defeat: 17 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>TomatoJr [ALS]</strong></td>
+                  <td>195,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Lotak</strong></td>
+                  <td>159,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">JohnCatt</div>
+            <div class="player-power">Power: 134,000,000 | Can defeat: 11 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Randell</div>
+            <div class="player-power">Power: 129,000,000 | Can defeat: 15 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Rylli</strong></td>
+                  <td>209,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arczimedes</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Jojo3</strong></td>
+                  <td>112,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Alfredo</div>
+            <div class="player-power">Power: 125,000,000 | Can defeat: 3 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">kyotoJP</div>
+            <div class="player-power">Power: 118,000,000 | Can defeat: 7 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Guest 72919</div>
+            <div class="player-power">Power: 117,000,000 | Can defeat: 12 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Jowii</strong></td>
+                  <td>172,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>birck</strong></td>
+                  <td>137,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Guest 7389</strong></td>
+                  <td>129,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Elucidator</div>
+            <div class="player-power">Power: 116,000,000 | Can defeat: 10 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Kupal</strong></td>
+                  <td>167,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>OhGee</strong></td>
+                  <td>158,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">NoNameKsp</div>
+            <div class="player-power">Power: 101,000,000 | Can defeat: 3 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Omazio</div>
+            <div class="player-power">Power: 101,000,000 | Can defeat: 8 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>mtzKATUJE</strong></td>
+                  <td>196,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Yiko</strong></td>
+                  <td>177,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">GENTLY</div>
+            <div class="player-power">Power: 98,800,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Krumper</div>
+            <div class="player-power">Power: 96,200,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">lilplant</div>
+            <div class="player-power">Power: 95,100,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Runescape</div>
+            <div class="player-power">Power: 92,300,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">hamdoli</div>
+            <div class="player-power">Power: 82,400,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">RIGL</div>
+            <div class="player-power">Power: 79,000,000 | Can defeat: 4 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Jiggabytes</div>
+            <div class="player-power">Power: 77,300,000 | Can defeat: 4 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">NightSlayerZ</div>
+            <div class="player-power">Power: 75,900,000 | Can defeat: 2 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Guest 91696</div>
+            <div class="player-power">Power: 74,400,000 | Can defeat: 6 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Paet</strong></td>
+                  <td>130,000,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Ragnarok4323</strong></td>
+                  <td>122,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Arnamik</strong></td>
+                  <td>110,000,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>AdaskuuuBKS</strong></td>
+                  <td>57,600,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">overwork</div>
+            <div class="player-power">Power: 71,600,000 | Can defeat: 2 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Camanche</div>
+            <div class="player-power">Power: 61,000,000 | Can defeat: 2 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Drxft</div>
+            <div class="player-power">Power: 58,100,000 | Can defeat: 2 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Nyatlathotep</div>
+            <div class="player-power">Power: 57,700,000 | Can defeat: 2 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr >
+                  <td><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">SiebenKingTulip</div>
+            <div class="player-power">Power: 34,200,000 | Can defeat: 2 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>omg</strong></td>
+                  <td>32,100,000</td>
+                  <td><strong style="color: #ffc107">90.0%</strong></td>
+                </tr>
+              
+                <tr >
+                  <td><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Davinnit</div>
+            <div class="player-power">Power: 21,500,000 | Can defeat: 1 enemies | Assigned: 1 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+                <tr class="assigned-target">
+                  <td><span class="checkmark">✓</span><strong>Stolar</strong></td>
+                  <td>14,500,000</td>
+                  <td><strong style="color: #28a745">100.0%</strong></td>
+                </tr>
+              
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">NotGuestAnymore</div>
+            <div class="player-power">Power: 13,900,000 | Can defeat: 0 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="player-section">
+        <div class="player-header">
+          <div>
+            <div class="player-name">Enigmatic</div>
+            <div class="player-power">Power: 7,360,000 | Can defeat: 0 enemies | Assigned: 0 targets</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Enemy</th>
+              <th>Power</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    
   </div>
-  <p>This is a test report to verify the GitHub Pages deployment script.</p>
-  <p>Once you export a real analysis from the app, run the deployment script to update this page.</p>
 </body>
 </html>
